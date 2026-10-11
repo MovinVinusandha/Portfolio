@@ -1,5 +1,7 @@
 # Movin Vinusandha · Portfolio
 
+[![CI/CD Pipeline](https://github.com/MovinVinusandha/Portfolio/actions/workflows/ci-cd.yml/badge.svg?branch=main)](https://github.com/MovinVinusandha/Portfolio/actions/workflows/ci-cd.yml)
+
 Personal portfolio website built with pure HTML5, CSS3, and Vanilla JavaScript.
 
 ## 🚀 Running Locally
