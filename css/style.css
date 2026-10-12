@@ -10,9 +10,10 @@
   --bg:#faf9f7; --ink:#1d1c1a; --muted:#67645e; --line:#e6e3dd; --accent:#1f65bd; --on-ink:#faf9f7;
   --card:rgba(255,255,255,.74); --card-line:#d9e6f1; --card-hover:#9ec5e8; --pill:#e6f1fb; --pill-ink:#1b5a9e;
   --wave-line:#b9d6ee; --cloud-op:1; --gear:#2f6fb0; --bgl-op:.13;
-  --sky1:#a9d3f2; --sky2:#e9f4fc;
+  --sky1:#79b7e6; --sky2:#cfe6f7;
+  --c0:#ffffff; --c1:#e3f0fa; --c2:#8fc3ea; --c3:#5ea7de; --c4:#3f8fd0;
   --t0:#9fcdf0; --t1:#c6e1f6; --t2:#e4f1fb;
-  --f0:#d6e9f9; --f1:#93c7ee; --f2:#4f9bdb; --f3:#2c74b8; --foot-ink:#fff;
+  --f0:#dcebf8; --f1:#8fc3ea; --f2:#5ea7de; --f3:#2c74b8; --foot-ink:#fff;
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){
@@ -20,7 +21,8 @@
     --bg:#141516; --ink:#eceae6; --muted:#9b9892; --line:#2a2b2d; --accent:#7ab6ee; --on-ink:#141516;
     --card:rgba(255,255,255,.045); --card-line:#2b3441; --card-hover:#476c93; --pill:#1f3249; --pill-ink:#9cc9f3;
     --wave-line:#2f4963; --cloud-op:.15; --gear:#7ab6ee; --bgl-op:.16;
-    --sky1:#1d3552; --sky2:#2a4a6c;
+    --sky1:#1a2f48; --sky2:#2a4a6c;
+    --c0:#34557b; --c1:#2b4a6f; --c2:#223e5f; --c3:#1b3352; --c4:#152a45;
     --t0:#2e5079; --t1:#244368; --t2:#1b3454;
     --f0:#1f3652; --f1:#1a3049; --f2:#152a42; --f3:#10223a; --foot-ink:#cfe3f7;
     color-scheme:dark;
@@ -30,7 +32,8 @@
   --bg:#141516; --ink:#eceae6; --muted:#9b9892; --line:#2a2b2d; --accent:#7ab6ee; --on-ink:#141516;
   --card:rgba(255,255,255,.045); --card-line:#2b3441; --card-hover:#476c93; --pill:#1f3249; --pill-ink:#9cc9f3;
   --wave-line:#2f4963; --cloud-op:.15; --gear:#7ab6ee; --bgl-op:.16;
-  --sky1:#1d3552; --sky2:#2a4a6c;
+  --sky1:#1a2f48; --sky2:#2a4a6c;
+  --c0:#34557b; --c1:#2b4a6f; --c2:#223e5f; --c3:#1b3352; --c4:#152a45;
   --t0:#2e5079; --t1:#244368; --t2:#1b3454;
   --f0:#1f3652; --f1:#1a3049; --f2:#152a42; --f3:#10223a; --foot-ink:#cfe3f7;
   color-scheme:dark;
@@ -135,14 +138,21 @@ h1 .slash,
 
 /* the sea scene: no edges. The sky fades in from the page colour and the front wave is the page colour. */
 .banner{position:relative;overflow:hidden;pointer-events:none}
-.banner.top{height:360px;margin-top:-64px}
-.banner .sky{position:absolute;inset:0;background:linear-gradient(180deg,transparent 0%,var(--sky1) 62%,var(--sky2) 100%)}
+.banner.top{height:360px;margin-top:-64px;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 18%,#000 66%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 18%,#000 66%,transparent 100%)}
+.banner .sky{position:absolute;inset:0;background:linear-gradient(180deg,transparent 0%,var(--sky1) 30%,var(--sky2) 100%)}
 .banner .z1,.banner .z2,.banner .z3{position:absolute;inset:0}
 .banner .z1{z-index:1}.banner .z2{z-index:2}.banner .z3{z-index:3}
 .layer{position:absolute;left:0;bottom:0;width:100%}
 .layer svg{display:block;max-width:none;animation:var(--anim) var(--dur) linear infinite;will-change:transform}
-.t0 path{fill:var(--t0)}.t1 path{fill:var(--t1)}.t2 path{fill:var(--t2)}.t3 path{fill:var(--bg)}
-.f0 path{fill:var(--f0)}.f1 path{fill:var(--f1)}.f2 path{fill:var(--f2)}.f3 path{fill:var(--f3)}
+.c0 circle,.c0 rect,.c0 :is(circle,rect){fill:var(--c0)}
+.c1 circle,.c1 rect,.c1 :is(circle,rect){fill:var(--c1)}
+.c2 circle,.c2 rect,.c2 :is(circle,rect){fill:var(--c2)}
+.c3 circle,.c3 rect,.c3 :is(circle,rect){fill:var(--c3)}
+.c4 circle,.c4 rect,.c4 :is(circle,rect){fill:var(--c4)}
+.f0 circle,.f0 rect,.f0 :is(circle,rect){fill:var(--f0)}
+.f1 circle,.f1 rect,.f1 :is(circle,rect){fill:var(--f1)}
+.f2 circle,.f2 rect,.f2 :is(circle,rect){fill:var(--f2)}
+.f3 circle,.f3 rect,.f3 :is(circle,rect){fill:var(--f3)}
 .it{position:absolute;left:var(--x,0);bottom:var(--b,0);width:var(--w,40px)}
 .it.drift{left:0;animation:drift var(--dur) linear infinite;animation-delay:var(--delay,0s)}
 .it.k-docker.drift{animation-name:driftL}
@@ -209,7 +219,7 @@ h1 .slash,
 .contact-list{display:flex;flex-wrap:wrap;gap:8px 24px;margin:20px 0 0;padding:0;list-style:none}
 
 /* sea footer: rises out of the page, ends in a solid water band */
-.banner.foot{height:250px;margin-top:88px}
+.banner.foot{height:250px;margin-top:88px;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 24%);mask-image:linear-gradient(180deg,transparent 0,#000 24%)}
 .sea-foot{position:relative}
 .foot-text{position:absolute;left:0;right:0;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:5;color:var(--foot-ink);font-size:.9rem}
 .foot-text .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
