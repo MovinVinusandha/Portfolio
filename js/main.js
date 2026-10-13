@@ -236,3 +236,134 @@
   }
   resetIdle();
 })();
+
+/**
+ * Interactive DevOps Banner Easter Eggs (No Tooltips)
+ * Enables click/tap reactions on floating banner icons:
+ * - Docker: Whale dive & water ripple ring particles
+ * - Kubernetes: Helm rotation pulse & pod burst particles
+ * - Gears: Mechanical revving hyper-spin & spark particles
+ * - Containers: Elastic crane stack bounce
+ */
+(function initBannerEasterEggs(){
+  var banners = document.querySelectorAll('.banner');
+  if(!banners.length) return;
+
+  function createFxLayer(banner){
+    var layer = banner.querySelector('.banner-fx-layer');
+    if(!layer){
+      layer = document.createElement('div');
+      layer.className = 'banner-fx-layer';
+      banner.appendChild(layer);
+    }
+    return layer;
+  }
+
+  function spawnParticles(banner, x, y, type, count){
+    var fx = createFxLayer(banner);
+    for(var i = 0; i < count; i++){
+      var p = document.createElement('div');
+      p.className = 'fx-particle ' + type;
+      p.style.left = x + 'px';
+      p.style.top = y + 'px';
+
+      if(type === 'fx-pod'){
+        var angle = (i / count) * Math.PI * 2 + (Math.random() * 0.4 - 0.2);
+        var dist = 28 + Math.random() * 24;
+        p.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
+        p.style.setProperty('--ty', (Math.sin(angle) * dist - 20) + 'px');
+        p.style.width = (10 + Math.random() * 6) + 'px';
+        p.style.height = p.style.width;
+      } else if(type === 'fx-spark'){
+        var sAngle = Math.random() * Math.PI * 2;
+        var sDist = 18 + Math.random() * 22;
+        p.style.setProperty('--tx', Math.cos(sAngle) * sDist + 'px');
+        p.style.setProperty('--ty', Math.sin(sAngle) * sDist + 'px');
+        p.style.width = (4 + Math.random() * 4) + 'px';
+        p.style.height = p.style.width;
+      } else if(type === 'fx-splash'){
+        var spAngle = -Math.PI * 0.85 + (i / (count - 1)) * Math.PI * 0.7 + (Math.random() * 0.2 - 0.1);
+        var spDist = 20 + Math.random() * 26;
+        p.style.setProperty('--tx', Math.cos(spAngle) * spDist + 'px');
+        p.style.setProperty('--ty', (Math.sin(spAngle) * spDist - 12) + 'px');
+        p.style.width = (6 + Math.random() * 5) + 'px';
+        p.style.height = p.style.width;
+      }
+
+      fx.appendChild(p);
+      (function(elem){
+        setTimeout(function(){
+          if(elem.parentNode) elem.parentNode.removeChild(elem);
+        }, 1100);
+      })(p);
+    }
+  }
+
+  banners.forEach(function(banner){
+    banner.addEventListener('click', function(e){
+      var target = e.target.closest('.it');
+      if(!target) return;
+
+      var bRect = banner.getBoundingClientRect();
+      var tRect = target.getBoundingClientRect();
+      var centerX = tRect.left + tRect.width / 2 - bRect.left;
+      var centerY = tRect.top + tRect.height / 2 - bRect.top;
+
+      if(target.classList.contains('k-docker')){
+        if(target.classList.contains('rolling')) return;
+
+        var now = Date.now();
+        var isDoubleClick = (target._lastClick && (now - target._lastClick < 450)) || target.classList.contains('diving');
+        target._lastClick = now;
+
+        if(isDoubleClick){
+          if(target._diveTimer){
+            clearTimeout(target._diveTimer);
+            target._diveTimer = null;
+          }
+          target.classList.remove('diving');
+          void target.offsetWidth; // trigger reflow for smooth animation restart
+          target.classList.add('rolling');
+
+          // Splashdown celebration droplets upon landing
+          setTimeout(function(){
+            spawnParticles(banner, centerX, centerY + 14, 'fx-splash', 8);
+          }, 1060);
+
+          target._rollTimer = setTimeout(function(){
+            target.classList.remove('rolling');
+            target._rollTimer = null;
+            target._lastClick = 0;
+          }, 1400);
+        } else {
+          if(target.classList.contains('diving')) return;
+          target.classList.add('diving');
+          target._diveTimer = setTimeout(function(){
+            target.classList.remove('diving');
+            target._diveTimer = null;
+          }, 1300);
+        }
+      } else if(target.classList.contains('k-k8s')){
+        if(target.classList.contains('scaling')) return;
+        target.classList.add('scaling');
+        spawnParticles(banner, centerX, centerY, 'fx-pod', 4);
+        setTimeout(function(){
+          target.classList.remove('scaling');
+        }, 750);
+      } else if(target.classList.contains('k-gear')){
+        if(target.classList.contains('revving')) return;
+        target.classList.add('revving');
+        spawnParticles(banner, centerX, centerY, 'fx-spark', 5);
+        setTimeout(function(){
+          target.classList.remove('revving');
+        }, 900);
+      } else if(target.classList.contains('k-ctr') || target.classList.contains('k-stack')){
+        if(target.classList.contains('bouncing')) return;
+        target.classList.add('bouncing');
+        setTimeout(function(){
+          target.classList.remove('bouncing');
+        }, 650);
+      }
+    });
+  });
+})();
