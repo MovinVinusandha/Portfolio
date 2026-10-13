@@ -281,6 +281,13 @@
         p.style.setProperty('--ty', Math.sin(sAngle) * sDist + 'px');
         p.style.width = (4 + Math.random() * 4) + 'px';
         p.style.height = p.style.width;
+      } else if(type === 'fx-splash'){
+        var spAngle = -Math.PI * 0.85 + (i / (count - 1)) * Math.PI * 0.7 + (Math.random() * 0.2 - 0.1);
+        var spDist = 20 + Math.random() * 26;
+        p.style.setProperty('--tx', Math.cos(spAngle) * spDist + 'px');
+        p.style.setProperty('--ty', (Math.sin(spAngle) * spDist - 12) + 'px');
+        p.style.width = (6 + Math.random() * 5) + 'px';
+        p.style.height = p.style.width;
       }
 
       fx.appendChild(p);
@@ -303,11 +310,39 @@
       var centerY = tRect.top + tRect.height / 2 - bRect.top;
 
       if(target.classList.contains('k-docker')){
-        if(target.classList.contains('diving')) return;
-        target.classList.add('diving');
-        setTimeout(function(){
+        if(target.classList.contains('rolling')) return;
+
+        var now = Date.now();
+        var isDoubleClick = (target._lastClick && (now - target._lastClick < 450)) || target.classList.contains('diving');
+        target._lastClick = now;
+
+        if(isDoubleClick){
+          if(target._diveTimer){
+            clearTimeout(target._diveTimer);
+            target._diveTimer = null;
+          }
           target.classList.remove('diving');
-        }, 1300);
+          void target.offsetWidth; // trigger reflow for smooth animation restart
+          target.classList.add('rolling');
+
+          // Splashdown celebration droplets upon landing
+          setTimeout(function(){
+            spawnParticles(banner, centerX, centerY + 14, 'fx-splash', 8);
+          }, 1060);
+
+          target._rollTimer = setTimeout(function(){
+            target.classList.remove('rolling');
+            target._rollTimer = null;
+            target._lastClick = 0;
+          }, 1400);
+        } else {
+          if(target.classList.contains('diving')) return;
+          target.classList.add('diving');
+          target._diveTimer = setTimeout(function(){
+            target.classList.remove('diving');
+            target._diveTimer = null;
+          }, 1300);
+        }
       } else if(target.classList.contains('k-k8s')){
         if(target.classList.contains('scaling')) return;
         target.classList.add('scaling');
