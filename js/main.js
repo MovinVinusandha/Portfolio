@@ -4,6 +4,10 @@
  */
 
 (function(){
+  // Eagerly preload reactions sprite so character reactions appear instantly on first click
+  var preloadImg = new Image();
+  preloadImg.src = 'assets/mascot-reactions.png';
+
   var btn = document.getElementById('mascot');
   if(!btn) return;
 
